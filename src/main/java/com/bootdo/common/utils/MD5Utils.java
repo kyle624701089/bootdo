@@ -10,11 +10,34 @@ public class MD5Utils {
 
 	private static final int HASH_ITERATIONS = 2;
 
+	/**
+	 * 
+	 * @Title: encrypt 
+	 * @param：@param pswd
+	 * @param：@return
+	 * @return：String
+	 * @Description：仅根据salt进行加密
+	 * @author sunkai
+	 * @date 2017年10月20日 上午11:05:17
+	 * @throws
+	 */
 	public static String encrypt(String pswd) {
 		String newPassword = new SimpleHash(ALGORITH_NAME, pswd, ByteSource.Util.bytes(SALT), HASH_ITERATIONS).toHex();
 		return newPassword;
 	}
 
+	/**
+	 * 
+	 * @Title: encrypt 
+	 * @param：@param username
+	 * @param：@param pswd
+	 * @param：@return
+	 * @return：String
+	 * @Description：根据username和salt的组合进行加密
+	 * @author huyf
+	 * @date 2017年10月20日 上午11:05:39
+	 * @throws
+	 */
 	public static String encrypt(String username, String pswd) {
 		String newPassword = new SimpleHash(ALGORITH_NAME, pswd, ByteSource.Util.bytes(username + SALT),
 				HASH_ITERATIONS).toHex();

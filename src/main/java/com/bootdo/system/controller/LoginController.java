@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.LogoutAware;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -32,11 +31,13 @@ public class LoginController extends BaseController {
 	@Autowired
 	MenuService menuService;
 
+	//当浏览器访问localhost:8090/和localhost:8090地址时服务器内部重定向到/blog页面
 	@GetMapping({ "/", "" })
 	String welcome(Model model) {
 		return "redirect:/blog";
 	}
 
+	//get请求访问index页面
 	@Log("请求访问主页")
 	@GetMapping({ "/index" })
 	String index(Model model) {
@@ -47,20 +48,23 @@ public class LoginController extends BaseController {
 		return "index_v1";
 	}
 
+	//当浏览器直接访问login接口时，返回login页面
 	@GetMapping("/login")
 	String login() {
 		return "login";
 	}
 
+	//通过登录按钮post访问login接口时，对身份进行
 	@Log("登录")
 	@PostMapping("/login")
 	@ResponseBody
 	R ajaxLogin(String username, String password) {
+		//对密码进行加密
 		password = MD5Utils.encrypt(username, password);
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		Subject subject = SecurityUtils.getSubject();
 		try {
-			subject.login(token);
+			subject.login(token);//身份验证：提交主体和凭据
 			return R.ok();
 		} catch (AuthenticationException e) {
 			return R.error("用户或密码错误");
